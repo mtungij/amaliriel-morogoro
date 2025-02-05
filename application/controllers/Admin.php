@@ -2265,7 +2265,7 @@ public function disburse($loan_id){
 	  $code = $loan_datas->code;
 	  $comp_name = $loan_datas->comp_name;
 	  $comp_phone = $loan_datas->comp_phone;
-	  $phones = $loan_datas->phone_no;
+	  $phone = $loan_datas->phone_no;
 
          //data inorder to send sms
 	  $fee_type = $this->queries->get_loanfee_type($comp_id);
@@ -2277,9 +2277,8 @@ public function disburse($loan_id){
         $remain_balance = $loan_aproved - $sms_data;
        }
 
-         $sms = $comp_name.' Imeingiza Mkopo Kiasi cha Tsh.'.$remain_balance.' kwenye Acc Yako ' . $loan_codeID .' Kwa msaada zaidi piga simu Namba '.$comp_phone;
-           $massage = $sms;
-           $phone = $phones;
+         $massage= $comp_name.' Imeingiza Mkopo Kiasi cha Tsh.'.$remain_balance.' kwenye Acc Yako ' . $loan_codeID .' Kwa msaada zaidi piga simu Namba '.$comp_phone;
+		 $this->sendsms($phone,$massage);
       
             //   echo "<pre>";
             // print_r($data);
@@ -2543,7 +2542,7 @@ public function disburse($loan_id){
          $day = $disbursed_data->day;
 	     $code = $disbursed_data->code;
 	     $comp_name = $disbursed_data->comp_name;
-	     $phones = $disbursed_data->phone_no;
+	     $phone = $disbursed_data->phone_no;
          $deposit = $balance;
          $remain_balance = $balance;
          $end_date = $day * $session;
@@ -2737,15 +2736,15 @@ public function disburse($loan_id){
 	  $code = $loan_datas->code;
 	  $comp_name = $loan_datas->comp_name;
 	  $comp_phone = $loan_datas->comp_phone;
-	  $phones = $loan_datas->phone_no;
+	  $phone = $loan_datas->phone_no;
       
 
 
 
            //send sms function
-         $sms = $comp_name.' Imeingiza Mkopo Kiasi cha Tsh.'.$remain_makato.' kwenye Acc Yako ' . $loan_codeID .' Kwa msaada zaidi Piga simu Namba '.$comp_phone;
-         $massage = $sms;
-         $phone = $phones;
+         $massage = $comp_name.' Imeingiza Mkopo Kiasi cha Tsh.'.$remain_makato.' kwenye Acc Yako ' . $loan_codeID .' Kwa msaada zaidi Piga simu Namba '.$comp_phone;
+		 $this->sendsms($phone,$massage);
+         
                // print_r($massage);
                //     exit();
             //Pass user data to model
@@ -2944,7 +2943,7 @@ public function create_withdrow_balance($customer_id){
              
 		  $datas_balance = $this->queries->get_remainbalance($customer_id);
 		  $customer_data = $this->queries->get_customerData($customer_id);
-		  $phones = $customer_data->phone_no;
+		  $phone = $customer_data->phone_no;
 		  $old_balance = $datas_balance->balance;
 		 
 		  $balance = $old_balance;
@@ -2960,9 +2959,9 @@ public function create_withdrow_balance($customer_id){
           $remain_balance = $balance;
           $today = date("Y-m-d H:i");
 
-          $sms = 'Tsh.'.$remain_balance.' Imetolewa kwenye Acc Yako ' . $loan_codeID .' Tarehe '.$today;
-          $massage = $sms;
-          $phone = $phones;
+		  $massage  = 'Tsh.'.$remain_balance.' Imetolewa kwenye Acc Yako ' . $loan_codeID .' Tarehe '.$today;
+         
+          $this->sendsms($phone,$massage);
 
 		//sms counter function
           @$smscount = $this->queries->get_smsCountDate($comp_id);
@@ -3220,8 +3219,8 @@ public function insert_loan_lecordData($comp_id,$customer_id,$loan_id,$blanch_id
 	$this->form_validation->set_error_delimiters('<div class="text-danger">','</div>');
 	   if ($this->form_validation->run()) {
 	      $depost = $this->input->post();
-	      // print_r($depost);
-	      //     exit();
+	    //   print_r($depost);
+	    //       exit();
 	      $customer_id = $depost['customer_id'];
 	      $comp_id = $depost['comp_id'];
 	      $blanch_id = $depost['blanch_id'];
@@ -3268,7 +3267,7 @@ public function insert_loan_lecordData($comp_id,$customer_id,$loan_id,$blanch_id
  
 	      @$data_depost = $this->queries->get_customer_Loandata($customer_id);
 	      $customer_data = $this->queries->get_customerData($customer_id);
-		  $phones = $customer_data->phone_no;
+		  $phone = $customer_data->phone_no;
 	      $admin_data = $this->queries->get_admin_role($comp_id);
 	      $remain_balance = @$data_depost->balance;
 	      $old_balance = $remain_balance;
@@ -3288,15 +3287,19 @@ public function insert_loan_lecordData($comp_id,$customer_id,$loan_id,$blanch_id
 	      @$deposit_check = $this->queries->get_today_deposit_true($loan_id);
 	      $dep_id = @$deposit_check->dep_id;
 	      $depost_res = @$deposit_check->depost;
+// echo "<pre>";
+// print_r($depost_res);
+// exit();
+
 	      $depost_method_res = @$deposit_check->depost_method;
           if ($deposit_check == TRUE) {
           $update_res = $depost_res + $new_depost;
           }else{
 	      $update_res = $new_depost;
            }      
-       //     echo "<pre>";
-	      // print_r($update_res);
-	      //          exit();
+        //    echo "<pre>";
+	    //   print_r($update_res);
+	    //            exit();
 
 	           //new code
 	      @$interest_data = $this->queries->get_interest_loan($loan_id);
@@ -3374,7 +3377,7 @@ public function insert_loan_lecordData($comp_id,$customer_id,$loan_id,$blanch_id
 	       if ($out_data == TRUE){
 	       	$new_balance = $new_depost;
 	       	if ($depost > $out_data->remain_amount){
-	       	$this->session->set_flashdata("error",'Your Depost Amount is Greater');
+	       	$this->session->set_flashdata("error",'The amount you Deposit Amount is Greater than debt');
 	       	}else{
 	       $remain_amount = $out_data->remain_amount;
 	       $paid_amount = $out_data->paid_amount;
@@ -3398,7 +3401,26 @@ public function insert_loan_lecordData($comp_id,$customer_id,$loan_id,$blanch_id
           
 
 	      if ($dep_id > 0) {
-	      	 $this->session->set_flashdata('massage','Deposit has made Sucessfully');
+
+				  // Get Customer Details
+				  $customer_data = $this->queries->get_customer_data($customer_id);
+				  echo "<pre>";
+				  print_r($customer_data);
+				  exit();
+	
+				  $phone = $customer_data->phone_no;
+			  
+				  // Create SMS Message
+				  $message = "Hello " . $customer_data->customer_name . ", your loan deposit of TZS " . number_format($depost, 2) . " has been received. Thank you for your payment.";
+			  
+				  // Send SMS
+				  $sms_response = $this->sendsms($phone, $message);
+			  
+				  // Log the response (for debugging)
+				  log_message('info', 'SMS Response: ' . $sms_response);
+	      	 $this->session->set_flashdata('massage','Deposit imefanyika');
+
+		
 	      }else{
 	      	$this->session->set_flashdata('massage','Failed');
 	      }
@@ -3432,7 +3454,7 @@ public function insert_loan_lecordData($comp_id,$customer_id,$loan_id,$blanch_id
 	     $remain_loan = $loan_int - $total_depost->remain_balance_loan;
 	        //sms send
 			$massage = 'Umeingiza Tsh.' .number_format($new_balance). ' kwenye Acc Yako ' . $loan_codeID .''. $comp_name.' Mpokeaji '.$role . ' Kiasi kilicho baki Kulipwa ni Tsh.'.number_format($remain_loan).' Kwa malalamiko piga '.$comp_phone;
-			$this->sendsms($phone_no, $massage);
+			$this->sendsms($phone, $massage);
          
 
           $loan_ID = $loan_id;
@@ -3473,9 +3495,9 @@ public function insert_loan_lecordData($comp_id,$customer_id,$loan_id,$blanch_id
          
           $new_balance = $new_depost;
 	      if ($dep_id > 0) {
-	      	 $this->session->set_flashdata('massage','Deposit has made Sucessfully');
+	      	 $this->session->set_flashdata('massage','Deposit has made successfully');
 	      }else{
-	      	$this->session->set_flashdata('massage','Deposit has made Sucessfully');
+	      	$this->session->set_flashdata('massage','deposit has made successfully');
 	      }
 	     if ($deposit_check == TRUE) {
 	     $this->update_loan_lecordDataDeposit_data($comp_id,$customer_id,$loan_id,$blanch_id,$update_res,$dep_id,$group_id,$trans_id,$restoration,$loan_aproved,$deposit_date,$empl_id);
@@ -3503,9 +3525,8 @@ public function insert_loan_lecordData($comp_id,$customer_id,$loan_id,$blanch_id
 	     $loan_int = $loan_restoration->loan_int;
 	     $remain_loan = $loan_int - $total_depost->remain_balance_loan;
 	        //sms send
-          $sms = 'Umeingiza Tsh.' .number_format($new_balance). ' kwenye Acc Yako ' . $loan_codeID . '' . $comp_name.' Mpokeaji '.$role . ' Kiasi kilicho baki Kulipwa ni Tsh.'.number_format($remain_loan).' Kwa malalamiko piga '.$comp_phone;
-          $massage = $sms;
-          $phone = $phones;
+			$massage = 'Umeingiza Tsh.' .number_format($new_balance). ' kwenye Acc Yako ' . $loan_codeID . '' . $comp_name.' Mpokeaji '.$role . ' Kiasi kilicho baki Kulipwa ni Tsh.'.number_format($remain_loan).' Kwa malalamiko piga '.$comp_phone;
+		  $this->sendsms($phone,$massage);
 
 
            $loan_ID = $loan_id;
@@ -3558,7 +3579,9 @@ public function insert_loan_lecordData($comp_id,$customer_id,$loan_id,$blanch_id
            }
           $new_balance = $new_depost;
 	      if ($dep_id > 0) {
-	      	 $this->session->set_flashdata('massage','Deposit has made Sucessfully');
+			$massage= 'Umeingiza Tsh.' .number_format($new_balance). ' kwenye Acc Yako ' . $loan_codeID . '' . $comp_name.' Mpokeaji '.$role . ' Kiasi kilicho baki Kulipwa ni Tsh.'.number_format($remain_loan).' Kwa malalamiko piga '.$comp_phone;
+			$this->sendsms($phone,$massage);
+	      	 $this->session->set_flashdata('massage','Deposit yenyewe hii');
 	      }else{
 	      	$this->session->set_flashdata('massage','Deposit has made Sucessfully');
 	      }
@@ -3614,9 +3637,8 @@ public function insert_loan_lecordData($comp_id,$customer_id,$loan_id,$blanch_id
 	     $loan_int = $loan_restoration->loan_int;
 	     $remain_loan = $loan_int - $total_depost->remain_balance_loan;
 	        //sms send
-          $sms = 'Umeingiza Tsh.' .number_format($new_balance). ' kwenye Acc Yako ' . $loan_codeID . '' . $comp_name.' Mpokeaji '.$role . ' Kiasi kilicho baki Kulipwa ni Tsh.'.number_format($remain_loan).' Kwa malalamiko piga '.$comp_phone;
-          $massage = $sms;
-          $phone = $phones;
+			$massage = 'Umeingiza Tsh.' .number_format($new_balance). ' kwenye Acc Yako ' . $loan_codeID . '' . $comp_name.' Mpokeaji '.$role . ' Kiasi kilicho baki Kulipwa ni Tsh.'.number_format($remain_loan).' Kwa malalamiko piga '.$comp_phone;
+			$this->sendsms($phone,$massage);
 
 
           //    //sms send
@@ -7625,12 +7647,12 @@ $this->load->view('admin/sms_history',['history'=>$history,'sms_jumla'=>$sms_jum
 
         $loan_code = $this->queries->get_loanCustomerCode($customer_id);
         $code = $loan_code->code;
-        $phones = $loan_code->phone_no;
+        $phone = $loan_code->phone_no;
         $comp_id = $loan_code->comp_id;
          
-        $sms = 'Namba ya Siri Ya Mkopo Wako ni ' .$code;
-        $massage = $sms;
-        $phone = $phones;
+        $massage = 'Namba ya Siri Ya Mkopo Wako ni ' .$code;
+       
+		$this->sendsms($phone,$massage);
         //sms count function
           @$smscount = $this->queries->get_smsCountDate($comp_id);
           $sms_number = @$smscount->sms_number;

@@ -3947,7 +3947,7 @@ public function disburse($loan_id){
           //           exit();
 
           if ($dep_id > 0) {
-             $this->session->set_flashdata('massage','Deposit has made Sucessfully');
+             $this->session->set_flashdata('massage','Deposit imefanyika');
           }else{
             $this->session->set_flashdata('massage','Deposit has made Sucessfully');
           }
