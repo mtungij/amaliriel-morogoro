@@ -5204,13 +5204,31 @@ public function fetch_employee($blanch_id)
 	return $data->result();
 }
 
-
+public function get_remain_amount($loan_id) {
+	// Query to join tbl_depost and tbl_loans and calculate remain_amount
+	$this->db->select('tbl_loans.loan_int - IFNULL(SUM(tbl_depost.depost), 0) as remain_amount');
+	$this->db->from('tbl_depost');
+	$this->db->join('tbl_loans', 'tbl_depost.loan_id = tbl_loans.loan_id', 'inner');
+	$this->db->where('tbl_depost.loan_id', $loan_id);
+	
+	// Execute the query
+	$query = $this->db->get();
+	
+	// Check if the query returned a result
+	if ($query->num_rows() > 0) {
+		return $query->row()->remain_amount;
+	} else {
+		return null;  // or return a default value (e.g., 0)
+	}
+}
 
 		public function get_loan_active_customer($customer_id){
      	$data = $this->db->query("SELECT l.loan_id,l.loan_int,l.restration,l.customer_id,ot.loan_stat_date,ot.loan_end_date,l.loan_status FROM tbl_loans l LEFT JOIN tbl_outstand ot ON ot.loan_id = l.loan_id  WHERE l.customer_id = '$customer_id' ORDER BY l.loan_id DESC");
      	return $data->row();
      }
 
+
+	 
      public function get_total_amount_paid_loan($loan_id){
      	$data = $this->db->query("SELECT SUM(depost) AS total_Deposit FROM tbl_depost WHERE loan_id = '$loan_id'");
      	return $data->row();
@@ -5309,11 +5327,17 @@ return $data->row();
 
 
 
-       public function get_today_deposit_true($loan_id){
-       	$date = date("Y-m-d");
-       	$data = $this->db->query("SELECT * FROM tbl_depost WHERE loan_id = '$loan_id' AND depost_day = '$date'");
-       	return $data->row();
-       }
+	   public function get_today_deposit_true($loan_id) {
+		$date = date("Y-m-d");
+		$data = $this->db->query("SELECT * FROM tbl_depost WHERE loan_id = '$loan_id' AND depost_day = '$date'");
+		$result = $data->row();
+	
+		return $result ? $result : 0;
+	}
+	
+
+	 
+	
 
 
   public function get_deposit_data_record($pay_id){
