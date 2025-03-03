@@ -3096,9 +3096,9 @@ public function disburse($loan_id){
         $remain_balance = $loan_aproved - $sms_data;
        }
 
-      $sms = $comp_name.' Imeingiza Mkopo Kiasi cha Tsh.'.$remain_balance.' kwenye Acc Yako ' . $loan_codeID .' Kwa msaada zaidi Piga simu Namba '.$comp_phone;
-      $massage = $sms;
-      $phone = $phones;
+      // $sms = $comp_name.' Imeingiza Mkopo Kiasi cha Tsh.'.$remain_balance.' kwenye Acc Yako ' . $loan_codeID .' Kwa msaada zaidi Piga simu Namba '.$comp_phone;
+      // $massage = $sms;
+      // $phone = $phones;
               //  print_r($massage);
               //       exit();
             //Pass user data to model
@@ -3234,9 +3234,9 @@ public function disburse($loan_id){
          //admin role
          $role = $empl_data->username;
 
-         $sms = 'Taasisi ya '.$comp_name.' Imeingiza Mkopo Kiasi cha Tsh.'.$remain_balance.' kwenye Acc Yako ' . $loan_codeID .' Namba ya siri ya kutolea mkopo ni '.$code;
-         $massage = $sms;
-         $phone = $phones;
+        //  $sms = 'Taasisi ya '.$comp_name.' Imeingiza Mkopo Kiasi cha Tsh.'.$remain_balance.' kwenye Acc Yako ' . $loan_codeID .' Namba ya siri ya kutolea mkopo ni '.$code;
+        //  $massage = $sms;
+        //  $phone = $phones;
            
       $fee_description = "Loan Processing Fee";
       $loan_fee = "0";
@@ -3375,9 +3375,9 @@ public function disburse($loan_id){
       // $sms_data = $total_loan_fee /100 * $balance;
       // $remain_balance = $balance - $sms_data;
 
-      $sms = 'Taasisi ya '.$comp_name.' Imeingiza Mkopo Kiasi cha Tsh.'.$remain_makato.' kwenye Acc Yako ' . $loan_codeID . 'Kwa msaada zaidi Piga Simu Namba'.$comp_phone;
-      $massage = $sms;
-      $phone = $phones;
+      // $sms = 'Taasisi ya '.$comp_name.' Imeingiza Mkopo Kiasi cha Tsh.'.$remain_makato.' kwenye Acc Yako ' . $loan_codeID . 'Kwa msaada zaidi Piga Simu Namba'.$comp_phone;
+      // $massage = $sms;
+      // $phone = $phones;
                // print_r($massage);
                //      exit();
             //Pass user data to model

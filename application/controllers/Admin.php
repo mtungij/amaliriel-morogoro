@@ -1022,7 +1022,7 @@ public function create_customer() {
            $this->load->model('queries');
            $check_nation_id = $this->queries->check_national_Id($natinal_identity);
             if ($check_nation_id == TRUE) {
-            $this->session->set_flashdata('error','National Identity Number Aledy Registered');	
+            $this->session->set_flashdata('error','National Identity Number Already existed');	
             return redirect('admin/customer_details/'.$customer_id);
             }elseif ($check_nation_id == FALSE) {
             $data = $this->queries->insert_customerData($data);
@@ -2082,9 +2082,9 @@ public function disburse($loan_id){
       $remain_balance = $balance - $sms_data;
         
      
-       $massage = 'Taasisi ya '.$comp_name.' Imeingiza Mkopo Kiasi cha Tsh.'.$remain_balance.' kwenye Acc Yako ' . $loan_codeID .' Namba yasiri ya kutolea mkopo ni '.$code;
+    //    $massage = 'Taasisi ya '.$comp_name.' Imeingiza Mkopo Kiasi cha Tsh.'.$remain_balance.' kwenye Acc Yako ' . $loan_codeID .' Namba yasiri ya kutolea mkopo ni '.$code;
 
-	  $this->sendsms($phone_no, $massage);
+	  
 
       $loan_fee_type = $this->queries->get_loanfee_type($comp_id);
       $type = $loan_fee_type->type;
@@ -2277,8 +2277,8 @@ public function disburse($loan_id){
         $remain_balance = $loan_aproved - $sms_data;
        }
 
-         $massage= $comp_name.' Imeingiza Mkopo Kiasi cha Tsh.'.$remain_balance.' kwenye Acc Yako ' . $loan_codeID .' Kwa msaada zaidi piga simu Namba '.$comp_phone;
-		 $this->sendsms($phone,$massage);
+        //  $massage= $comp_name.' Imeingiza Mkopo Kiasi cha Tsh.'.$remain_balance.' kwenye Acc Yako ' . $loan_codeID .' Kwa msaada zaidi piga simu Namba '.$comp_phone;
+		
       
             //   echo "<pre>";
             // print_r($data);
@@ -2742,9 +2742,8 @@ public function disburse($loan_id){
 
 
            //send sms function
-         $massage = $comp_name.' Imeingiza Mkopo Kiasi cha Tsh.'.$remain_makato.' kwenye Acc Yako ' . $loan_codeID .' Kwa msaada zaidi Piga simu Namba '.$comp_phone;
-		 $this->sendsms($phone,$massage);
-         
+        //  $massage = $comp_name.' Imeingiza Mkopo Kiasi cha Tsh.'.$remain_makato.' kwenye Acc Yako ' . $loan_codeID .' Kwa msaada zaidi Piga simu Namba '.$comp_phone;
+	
                // print_r($massage);
                //     exit();
             //Pass user data to model
