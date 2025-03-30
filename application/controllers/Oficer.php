@@ -76,9 +76,9 @@ class Oficer extends CI_Controller{
 
 
 
-      //    echo "<pre>";
-      // print_r($non_deducted);
-      //     exit();
+         echo "<pre>";
+      print_r($total_customer);
+          exit();
     $this->load->view('officer/index',['receivable_total'=>$receivable_total,'total_received'=>$total_received,'total_loan_pending'=>$total_loan_pending,'total_loanWithdrawal'=>$total_loanWithdrawal,'today_penart'=>$today_penart,'total_received'=>$total_received,'prepaid_today'=>$prepaid_today,'total_loan_fee'=>$total_loan_fee,'today_income'=>$today_income,'toay_expences'=>$toay_expences,'manager_data'=>$manager_data,'privillage'=>$privillage,'today_depost'=>$today_depost,'today_income'=>$today_income,'today_expences'=>$today_expences,'rejesho'=>$rejesho,'manager'=>$manager,'principal_loan'=>$principal_loan,'total_expect'=>$total_expect,'done_loan'=>$done_loan,'total_blanch'=>$total_blanch,'total_empl'=>$total_empl,'total_customer'=>$total_customer,'active_customer'=>$active_customer,'pending_customer'=>$pending_customer,'total_loan_request'=>$total_loan_request,'loan_aproved'=>$loan_aproved,'loan_pend'=>$loan_pend,'comp_recevable'=>$comp_recevable,'receved'=>$receved,'recomended'=>$recomended,'branch'=>$branch,'loan_feeClose'=>$loan_feeClose,'outstand_loan'=>$outstand_loan,'blanch_outstand'=>$blanch_outstand,'loan_aproveClose'=>$loan_aproveClose,'withdrawalclose'=>$withdrawalclose,'loan_depostClose'=>$loan_depostClose,'receive_AmountClose'=>$receive_AmountClose,'request_expencesclose'=>$request_expencesclose,'loan_feeCloseData'=>$loan_feeCloseData,'deducted'=>$deducted,'non_deducted'=>$non_deducted,'blanch_amount_balance'=>$blanch_amount_balance]);
     }
 
@@ -1147,10 +1147,7 @@ public function insert_companyAccount_income($comp_id,$comp_total){
         $employee = $this->queries->get_employee($comp_id);
         $privillage = $this->queries->get_position_empl($empl_id);
         $manager = $this->queries->get_position_manager($empl_id);
-         //  echo "<pre>";
-         // print_r($empl_data);
-         // echo "</pre>";
-         //   exit();
+      
         $this->load->view('officer/employee',['blanch'=>$blanch,'position'=>$position,'employee'=>$employee,'empl_data'=>$empl_data,'privillage'=>$privillage,'manager'=>$manager]);
     }
 

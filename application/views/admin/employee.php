@@ -91,6 +91,7 @@
 								<option value="female">Female</option>
 							 </select>
 								</div>
+					
 								<div class="col-lg-3 form-group-sub">
 									<label  class="form-control-label">*Salary Amount:</label>
 								<input type="number" name="salary" placeholder="Salary Amount" autocomplete="off" class="form-control input-sm" required>
@@ -127,6 +128,20 @@
 									<label  class="form-control-label">*Account Number:</label>
 							<input type="text" name="account_no" placeholder="Account Number" autocomplete="off" class="form-control input-sm" required>
 								</div>
+								<div class="col-lg-12 form-group-sub">
+                <label class="form-control-label">*Assign Permissions:</label>
+                <div class="form-group">
+                    <?php foreach ($system_links as $link): ?>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" name="permissions[]" value="<?php echo $link->id; ?>">
+                            <label class="form-check-label" for="permission<?php echo $link->id; ?>">
+                                <?php echo $link->link_name; ?>
+                            </label>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+			
 						<input type="hidden" name="password" value="1234">
 
 							</div>

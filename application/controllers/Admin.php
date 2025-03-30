@@ -594,46 +594,112 @@ $sqldata="UPDATE `tbl_ac_company` SET `comp_balance`= '$total_remain' WHERE  `tr
 		$blanch = $this->queries->get_blanch($comp_id);
 		$position = $this->queries->get_position();
 		$employee = $this->queries->get_employee($comp_id);
+		$system_links =$this->queries->get_all_links();
+	// 	echo "<pre>";
+	//    print_r( $system_link );
+	//    echo "</pre>";
+	// 	 exit();
 		 //  echo "<pre>";
 		 // print_r($employee);
 		 // echo "</pre>";
 		 //   exit();
-		$this->load->view('admin/employee',['blanch'=>$blanch,'position'=>$position,'employee'=>$employee]);
+		$this->load->view('admin/employee',['blanch'=>$blanch,'position'=>$position,'system_links'=>$system_links,'employee'=>$employee]);
 	}
 
 	public function create_employee(){
-		$this->form_validation->set_rules('comp_id','company','required');
-		$this->form_validation->set_rules('blanch_id','blanch','required');
-		$this->form_validation->set_rules('ac_status','Acount status','required');
-		$this->form_validation->set_rules('empl_name','Empl name','required');
-		$this->form_validation->set_rules('empl_no','phone number','required');
-		$this->form_validation->set_rules('empl_email','Email','required');
-		$this->form_validation->set_rules('position_id','position','required');
-		$this->form_validation->set_rules('salary','salary','required');
-		$this->form_validation->set_rules('pays','pays','required');
-		$this->form_validation->set_rules('username','username','required');
-		$this->form_validation->set_rules('pay_nssf','pay nssf','required');
-		$this->form_validation->set_rules('bank_account','bank account','required');
-		$this->form_validation->set_rules('account_no','account no','required');
-		$this->form_validation->set_rules('password','password','required');
-		$this->form_validation->set_error_delimiters('<div class="text-danger">','</div>');
+		$this->form_validation->set_rules('comp_id', 'Company', 'required');
+		$this->form_validation->set_rules('blanch_id', 'Branch', 'required');
+		$this->form_validation->set_rules('ac_status', 'Account status', 'required');
+		$this->form_validation->set_rules('empl_name', 'Employee Name', 'required');
+		$this->form_validation->set_rules('empl_no', 'Phone Number', 'required');
+		$this->form_validation->set_rules('empl_email', 'Email', 'required|valid_email');
+		$this->form_validation->set_rules('position_id', 'Position', 'required');
+		$this->form_validation->set_rules('salary', 'Salary', 'required|numeric');
+		$this->form_validation->set_rules('pays', 'Pays', 'required');
+		$this->form_validation->set_rules('username', 'Username', 'required|is_unique[tbl_employee.username]');
+		$this->form_validation->set_rules('pay_nssf', 'Pay NSSF', 'required');
+		$this->form_validation->set_rules('bank_account', 'Bank Account', 'required');
+		$this->form_validation->set_rules('account_no', 'Account Number', 'required');
+		$this->form_validation->set_rules('password', 'Password', 'required|min_length[4]');
+		$this->form_validation->set_error_delimiters('<div class="text-danger">', '</div>');
+	
 		if ($this->form_validation->run()) {
 			$data = $this->input->post();
+           $permissions = $data['permissions']; // Store permissions separately
+           unset($data['permissions']); // Remove permissions from main data array
 			$data['password'] = sha1($this->input->post('password'));
-			  //  echo "<pre>";
-			  // print_r($data);
-			  // echo "</pre>";
-			  //    exit();
 			$this->load->model('queries');
-			if ($this->queries->insert_employee($data)) {
-				 $this->session->set_flashdata('massage','Eployee Registered successfully Password = 1234');
-			}else{
-				$this->session->set_flashdata('error','Failed');
+			// Start Transaction for Consistency
+			$this->db->trans_start();
+	
+			// Insert Employee
+			$employee_id = $this->queries->insert_employee($data);
+	
+			if ($employee_id) {
+				// Insert Permissions if Available
+				$permissions = $this->input->post('permissions');
+				if (!empty($permissions)) {
+					foreach ($permissions as $permission) {
+						$this->queries->insert_permission([
+							'employee_id' => $employee_id,
+							'link_id' => $permission
+						]);
+					}
+				}
 			}
+	
+			// Complete Transaction
+			$this->db->trans_complete();
+	
+			if ($this->db->trans_status() === FALSE) {
+				// If transaction fails, redirect with an error
+				$this->session->set_flashdata('error', 'Failed to create employee. Try again.');
+				return redirect('admin/create_employee');
+			}
+	
+			$this->session->set_flashdata('success', 'Employee created successfully.');
 			return redirect('admin/employee');
 		}
+	
 		$this->employee();
 	}
+
+	public function all_customer_sms()
+	{
+		
+
+	$this->load->view('admin/all_members');
+	}
+
+	public function create_sms()
+	{
+		$this->load->model('queries');
+		$comp_id = $this->session->userdata('comp_id');
+		$blanch = $this->queries->get_blanch($comp_id);
+		$customers = $this->queries->get_allcutomer($comp_id);
+		$message_template = $this->input->post('sms'); // Get SMS template from form
+	
+		foreach ($customers as $customer) {
+			$full_name = $customer->f_name . ' ' . $customer->m_name . ' ' . $customer->l_name;
+			$phone = $customer->phone_no;
+	
+			// Replace placeholder with customer name
+			$massage = "Ndugu " . $full_name . ", " . $message_template;
+
+	
+			// Send SMS function (Implement your SMS API here)
+			$this->sendsms($phone, $massage);
+		}
+	
+		$this->session->set_flashdata('message', 'SMS sent successfully!');
+		redirect('admin/create_sms');
+	}
+
+  
+
+
+	
+	
 
 
 	public function modify_employee($empl_id){

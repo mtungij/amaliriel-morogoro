@@ -861,6 +861,9 @@
             <a  href="<?php echo base_url("admin/get_cashInHand_Data"); ?>" class="kt-menu__link "><i class="kt-menu__link-icon flaticon-layer"></i><span class="kt-menu__link-text">Cash Book</span></a>
           </li>
 
+		  <li class="kt-menu__item " aria-haspopup="true" >
+            <a  href="<?php echo base_url("admin/all_customer_sms"); ?>" class="kt-menu__link "><i class="kt-menu__link-icon flaticon-layer"></i><span class="kt-menu__link-text">Group Message</span></a>
+          </li>
 
        
 
